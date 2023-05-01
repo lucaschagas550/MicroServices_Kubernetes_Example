@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolume #Persist volume
+metadata:
+  name: aspnet-pv #define nome do objeto
+  labels: #define a label associada a este pv
+    type: local-pv
+spec:
+  capacity: #define o tamanho do armazenamento
+    storage: 5Mi #5 megabyte, 5Gi eh giga
+  volumeMode: Filesystem # Define o modo do Pv, block e Filesystem, o filesystem eh o modo padrao
+  accessModes: #Define o modo de acesso
+    #ReadWriteOnce - RWO: permite que apenas um unico no acesso o volume no modo de leitura e gravao, e, todos os pods nesse unico no podem ler e gravar nesses volumes.
+    #ReadOnlyMnay - ROX: Indica que o volume estara em modo somente leitura e acessivel por varios nos
+    #ReadWriteMnay - RWX: varios nos podem ler e gravar no volume.
+    #ReadWrietOncePod - RWOP: Indica que apeans um unico pod pode obter acesso ao volume.
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle #Define a politica de recuperacao
+  #Recycle: Executam uma limpeza basica no volume eo disponibilizam novamente para uma nova solicitacao
+  #Retain: Recuperacao manual. A exclusao dos PVCs nao exclui o PV. ele ainda pode existir no cluster e ser considerado "liberado"
+  #Delete: O armazenamento associado sera excluido
+  hostPath: #Define o tipo de volume usado
+    path: "/app/meuvolume"
+  storageClassName: manual #Define o storagename usada para vincular o PV ao PVC

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1 #indica a versao da api do ingress
+kind: Ingress #especificao o tipo do objeto que eh o ingress
+metadata:
+  name: frontend-ingress #nome do do ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: / #controla a reescrita da url, tem como alvo a URI onde o trafico sera redirecinado, o valor definido como /
+    #assim para uma correspondencia da URI, ela sera rescrita para /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix # cada path tem que ter um pathtype, eh obrigatorio, que pode ter 2 valores principais
+            # Exact => que corresponde exatamente ao caminha da url e diferencia maiusculas de minusculas
+            # Prefix => A correspondencia eh feita pela para que a URL comece com o valor especificado no campo path, isso eh, a URL deve ser prefixada
+            #com valor especificado no campo path
+            backend:
+              service:
+                name: pizzafrontend #O ingress, sera aplicado no servico do pizzafrontend, que foi definido no arquivo frontend-deploy
+                port:
+                  number: 8080
